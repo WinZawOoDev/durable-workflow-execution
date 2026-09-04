@@ -17,5 +17,12 @@
     "@types/node": "^26.4.1",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@temporalio/activity": "^1.23.0",
+    "@temporalio/client": "^1.23.0",
+    "@temporalio/common": "^1.23.0",
+    "@temporalio/worker": "^1.23.0",
+    "@temporalio/workflow": "^1.23.0"
   }
 }
