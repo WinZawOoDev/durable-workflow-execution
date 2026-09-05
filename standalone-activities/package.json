@@ -1,24 +1,15 @@
 {
   "name": "standalone-activities",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "tsx watch src/index.ts",
-    "start": "node dist/index.js",
+    "worker": "node --loader ts-node/esm src/worker.ts",
+    "client": "node --loader ts-node/esm src/client.ts",
+    "start": "node dist/worker.js",
     "typecheck": "tsc --noEmit"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "devDependencies": {
-    "@tsconfig/node24": "^24.0.5",
-    "@tsconfig/recommended": "^1.0.13",
-    "@types/node": "^26.4.1",
-    "tsx": "^4.23.13",
-    "typescript": "^7.0.2"
   },
   "dependencies": {
     "@temporalio/activity": "^1.23.0",
@@ -27,5 +18,10 @@
     "@temporalio/envconfig": "^1.23.0",
     "@temporalio/worker": "^1.23.0",
     "@temporalio/workflow": "^1.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }

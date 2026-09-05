@@ -1,5 +1,5 @@
 import { NativeConnection, Worker } from "@temporalio/worker";
-import * as activities from "./activities.js";
+import * as activities from "./activities.ts";
 
 async function run() {
 
@@ -13,7 +13,7 @@ async function run() {
             connection,
             namespace: "default",
             taskQueue: "standalone-activities",
-            workflowsPath: require.resolve("./worker.ts"),
+            workflowsPath: new URL( "./workflows.ts", import.meta.url, ).pathname,
             activities
         })
 
