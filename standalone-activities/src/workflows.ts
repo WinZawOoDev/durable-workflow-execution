@@ -1,7 +1,7 @@
 import { proxyActivities } from "@temporalio/workflow";
 import type * as activities from "./activities.js"
 
-const {greet} = proxyActivities<typeof activities>({
+const { greet } = proxyActivities<typeof activities>({
     startToCloseTimeout: "1 minute",
 })
 
