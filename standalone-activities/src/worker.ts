@@ -1,5 +1,7 @@
 import { NativeConnection, Worker } from "@temporalio/worker";
 import * as activities from "./activities.ts";
+import { fileURLToPath } from "node:url";
+import { DEFAULT_NAMESPACE, DEFAULT_TASK_QUEUE } from "./constant.ts";
 
 async function run() {
 
@@ -7,20 +9,17 @@ async function run() {
         address: "localhost:7233",
     })
 
+    const worker = await Worker.create({
+        connection,
+        namespace: DEFAULT_NAMESPACE,
+        taskQueue: DEFAULT_TASK_QUEUE, 
+        workflowsPath: fileURLToPath(
+            new URL("./workflows.ts", import.meta.url)
+        ),
+        activities
+    })
 
-    try {
-        const worker = await Worker.create({
-            connection,
-            namespace: "default",
-            taskQueue: "standalone-activities",
-            workflowsPath: new URL( "./workflows.ts", import.meta.url, ).pathname,
-            activities
-        })
-
-        await worker.run();
-    } finally {
-        await connection.close();
-    }
+    await worker.run();
 
 }
 
