@@ -3,7 +3,7 @@ export async function greet(name: string): Promise<string> {
 }
 
 export async function triggerWebHook(): Promise<Record<string, any>> {
-  const res = await fetch(`http://localhost:9000`, {method: "POST"});
+  const res = await fetch(`http://localhost:9000`, { method: "POST" });
   const data = await res.json();
 
   return data as Record<string, any>;
@@ -28,6 +28,12 @@ export async function paymentStatusHooks({
     },
     body: JSON.stringify({ status, amount, transactionId: transactionId }),
   });
+
+  console.log("Payment status hook response status:", res.ok);
+
+  if (!res.ok) {
+    throw new Error(`Failed to send payment status hook: ${res.statusText}`);
+  }
 
   const data = await res.json();
   return data as Record<string, any>;

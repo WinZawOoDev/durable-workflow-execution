@@ -44,7 +44,8 @@ const server = createServer(async (req, res) => {
 
     console.log("Payment status request body:", requestBody);
 
-    res.writeHead(200, { "Content-Type": "application/json" });
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.statusCode = 500;
     res.end(JSON.stringify({ message: "Payment status received" }));
     return;
   }

@@ -9,9 +9,13 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "rootDir": "standalone-activities/src",
+    "rootDir": "./",
     "outDir": "./dist",
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["standalone-activities/src/**/*.ts"]
+  "include": [
+    "*.ts"
+  ]
 }
