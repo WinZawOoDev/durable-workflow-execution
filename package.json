@@ -1,14 +1,15 @@
 {
-  "name": "standalone-activities",
+  "name": "durable-workflow-execution",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "main": "dist/index.js",
+  "main": "index.ts",
   "scripts": {
     "build": "tsc",
-    "worker": "node --loader ts-node/esm src/worker.ts",
-    "client": "node --loader ts-node/esm src/client.ts",
+    "worker": "ts-node standalone-activities/worker.ts",
+    "client": "ts-node standalone-activities/client.ts",
     "start": "node dist/worker.js",
+    "webhooks-receiver": "nodemon webhooksReceiver.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -22,7 +23,8 @@
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.20.1",
+    "nodemon": "^3.1.14",
     "prettier": "^3.4.0",
     "ts-node": "^10.9.0",
     "typescript": "^5.6.0"
