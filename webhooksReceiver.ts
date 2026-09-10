@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 const appState = {
   requestId: "",
   requestCount: 0,
+  idempotentKey: new Set<string | undefined>(),
 };
 
 const server = createServer(async (req, res) => {
@@ -26,18 +27,36 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  const idempotentKey = req.headers["x-idempotent-key"] as string | undefined;
+
+  console.log("Idempotent Key:", idempotentKey);
+
+  if (idempotentKey && appState.idempotentKey.has(idempotentKey)) {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ message: "Duplicate Idempotent Key" }));
+
+    return;
+  }
+
+  if (idempotentKey) {
+    appState.idempotentKey.add(idempotentKey);
+  }
+
   if (url.pathname.startsWith("/payment-status")) {
     console.log("Payment status webhook received");
 
     const requestBody = await new Promise((resolve, reject) => {
       let body = "";
       req.on("data", (chunk) => {
+        console.log("Receiving data chunk:", chunk);
         body += chunk;
       });
       req.on("end", () => {
+        console.log("Finished receiving data");
         resolve(body);
       });
       req.on("error", (err) => {
+        console.error("Error receiving data:", err);
         reject(err);
       });
     });

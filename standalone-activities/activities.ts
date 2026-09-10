@@ -14,17 +14,20 @@ export async function paymentStatusHooks({
   status,
   amount,
   transactionId,
+  idempotentKey,
 }: {
   endpoint: string;
   status: string;
   amount: string;
   transactionId: string;
+  idempotentKey: string;
 }): Promise<Record<string, any>> {
   const res = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-webhooks-signature": "aHvj7WKQPFB1KU00WkUhJAtKXAHal40t",
+      "x-idempotent-key": idempotentKey,
     },
     body: JSON.stringify({ status, amount, transactionId: transactionId }),
   });

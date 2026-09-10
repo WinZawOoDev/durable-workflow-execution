@@ -1,11 +1,14 @@
 import { Client, Connection } from "@temporalio/client";
-import { greetingWorkflow, paymentStatusHooksWorkflow, webHookWorkFlow } from "./workflows.ts";
+import {
+  greetingWorkflow,
+  paymentStatusHooksWorkflow,
+  webHookWorkFlow,
+} from "./workflows.ts";
 import { nanoid } from "nanoid";
 import { DEFAULT_TASK_QUEUE } from "./constant.ts";
 
-async function run() {
+async function run(eventId: string) {
   const connection = await Connection.connect({ address: "localhost:7233" });
-
   const client = new Client({ connection });
 
   const greetingClient = await client.workflow.start(greetingWorkflow, {
@@ -27,18 +30,23 @@ async function run() {
     `Executed webhook workflow result ${JSON.stringify(webhookClient)}`,
   );
 
-  const paymentStatusHooksClient = await client.workflow.execute(paymentStatusHooksWorkflow, {
-    taskQueue: DEFAULT_TASK_QUEUE,
-    workflowId: `payment-status-hooks-workflow-${nanoid()}`,
-    args: [
-      {
-        endpoint: "http://localhost:9000/payment-status",
-        status: "received",
-        amount: "100",
-        transactionId: "txn_123456",
-      },
-    ],
-  });
+  console.log(`Event ID: ${eventId}`);
+  const paymentStatusHooksClient = await client.workflow.execute(
+    paymentStatusHooksWorkflow,
+    {
+      taskQueue: DEFAULT_TASK_QUEUE,
+      workflowId: `payment-status-hooks-workflow-${nanoid()}`,
+      args: [
+        {
+          endpoint: "http://localhost:9000/payment-status",
+          status: "received",
+          amount: "100",
+          transactionId: "txn_123456",
+          idempotentKey: eventId,
+        },
+      ],
+    },
+  );
 
   console.log(
     `Executed payment status hooks workflow result ${JSON.stringify(paymentStatusHooksClient)}`,
@@ -47,7 +55,9 @@ async function run() {
   connection.close();
 }
 
-run().catch((err) => {
+const eventId = process.argv[2] ?? "event-" + nanoid();
+
+run(eventId).catch((err) => {
   console.error(err);
   process.exit(1);
 });

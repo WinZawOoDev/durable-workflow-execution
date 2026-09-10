@@ -20,11 +20,20 @@ export async function paymentStatusHooksWorkflow({
   status,
   amount,
   transactionId,
+  idempotentKey,
 }: {
   endpoint: string;
   status: string;
   amount: string;
   transactionId: string;
+  idempotentKey: string;
 }): Promise<Record<string, any>> {
-  return await paymentStatusHooks({ endpoint, status, amount, transactionId });
+  
+  return await paymentStatusHooks({
+    endpoint,
+    status,
+    amount,
+    transactionId,
+    idempotentKey,
+  });
 }
